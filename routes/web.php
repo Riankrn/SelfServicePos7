@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\profileController;
+use Illuminate\Routing\Route as RoutingRoute;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,9 @@ use App\Http\Controllers\profileController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
 
 Route::get('/about', function () {
     return 'Halaman About';
@@ -48,9 +52,13 @@ Route::get('/about/{search}', function () {
 // Route::post('/produk/update_produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
 
 // Route:: get('/profile', function() {
-//     $nama ="Resa Meylani";
+//     $nama ="Meike Nadya Chandra";
 //     return view ('profile', compact('nama'));
 // });
-Route::resource('user', UserController::class);
-Route::resource('produk', ProdukController::class);
-Route::resource('profile', ProfileController::class);
+
+
+Route::middleware(['auth', 'user'])->group(function() {
+    Route::resource('produk', ProdukController::class);
+});
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
